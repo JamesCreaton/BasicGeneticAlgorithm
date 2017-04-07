@@ -150,6 +150,8 @@ void Renderer2D::begin() {
 	m_currentVertex = 0;
 	m_currentTexture = 0;
 
+	//glPolygonMode(GL_FRONT, GL_LINE);
+
 	int width = 0, height = 0;
 	auto window = glfwGetCurrentContext();
 	glfwGetWindowSize(window, &width, &height);
