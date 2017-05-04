@@ -12,14 +12,17 @@ public:
 	Person();
 	~Person();
 
+
 	void init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions);
 	void Update(float dt);
 	void Draw(aie::Renderer2D* renderer);
 
 	//Setters
 	void SetInstructionSet(std::string instructions);
+	void SetFitness(float a_fitness);
 
 	//Getters
+	float GetFitness();
 	b2Body* GetBody() { return m_body; }
 	b2Fixture* GetFixture() { return m_fixture; }
 
@@ -38,5 +41,5 @@ private:
 
 	//Testing
 	int currentMove;
-};
+}; 
 

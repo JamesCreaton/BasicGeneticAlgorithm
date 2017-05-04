@@ -93,3 +93,13 @@ void Person::MoveAgent(int move)
 	currentMove++;
 }
 
+void Person::SetFitness(float a_fitness) 
+{
+	m_fitness = a_fitness;
+}
+
+float Person::GetFitness()
+{
+	return m_fitness;
+}
+
