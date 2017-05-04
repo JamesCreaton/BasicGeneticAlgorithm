@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <list>
 
 #include "Person.h"
 
@@ -15,6 +16,6 @@ public:
 
 
 protected:
-	std::vector<Person*>		m_people;
+	std::vector<Person*>			m_people;
 };
 

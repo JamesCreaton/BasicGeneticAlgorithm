@@ -13,8 +13,10 @@
 class GA
 {
 public:
-	GA();
+	GA(b2Vec2 Target);
 	~GA();
+
+	void CalculateSuccess(Person* a_person);
 
 	struct Chromosone {
 		std::string m_bits;
@@ -40,5 +42,12 @@ protected:
 
 private:
 	std::string GenRandomBits(int length);
+
+	Person* GA::GetHighestScorer();
+
+	int				m_currentGeneration;
+	bool			m_simulationStarted;
+
+	b2Vec2			m_target;
 };
 

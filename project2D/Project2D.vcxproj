@@ -142,6 +142,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Person.cpp" />
     <ClCompile Include="Population.cpp" />
+    <ClCompile Include="Target.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\Box2D\Box2D\Collision\b2BroadPhase.h" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Person.h" />
     <ClInclude Include="Population.h" />
+    <ClInclude Include="Target.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -10,6 +10,8 @@
 #include <vector>
 #include "GA.h"
 #include "Person.h"
+#include "Sphere.h"
+#include "Target.h"
 
 using glm::vec2;
 using glm::vec3;
@@ -33,7 +35,7 @@ private:
 
 	std::unique_ptr<b2World>		m_world;
 	b2Vec2							m_gravity;
-	std::vector<Box>				m_boxes;
+	Box*							m_target;
 
 	float							m_cameraX, m_cameraY;
 };

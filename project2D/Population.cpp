@@ -11,7 +11,7 @@ Population::Population(int populationSize)
 	m_people.resize(populationSize);
 
 	for (int i = 0; i < populationSize; i++) {
-		m_people[i] = new Person();
+		m_people.push_back(new Person());
 	}
 }
 

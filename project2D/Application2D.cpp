@@ -20,14 +20,17 @@ Application2D::~Application2D() {
 bool Application2D::startup() {
 	m_2dRenderer = new aie::Renderer2D();
 
-	//m_gravity = b2Vec2(0.0f, -9.81f);
 	m_gravity = b2Vec2(0.0f, 0.0f);
 	m_world = std::make_unique<b2World>(m_gravity);
 
-	m_ga = new GA();
+	m_target = new Box();
+	m_target->init(m_world.get(), glm::vec2(getWindowWidth() - 50, getWindowHeight() / 2), glm::vec2(50, 50));
+
+	m_ga = new GA(b2Vec2(m_target->GetBody()->GetPosition()));
+
 
 	for (int i = 0; i < m_ga->GetPeople().size(); i++) {
-		m_ga->GetPeople()[i]->init(m_world.get(), glm::vec2(getWindowWidth() /2, getWindowHeight() / 2), glm::vec2(25.0f, 25.0f));
+		m_ga->GetPeople()[i]->init(m_world.get(), glm::vec2(getWindowWidth() / 2, getWindowHeight() / 2), glm::vec2(25.0f, 25.0f));
 	}
 	
 	m_cameraX = 0;
@@ -63,12 +66,10 @@ void Application2D::draw() {
 
 	// begin drawing sprites
 	m_2dRenderer->begin();
+	
+	m_target->Draw(m_2dRenderer);
 
-	for (auto& box : m_boxes) {
-		box.Draw(m_2dRenderer);
-	}
-
-	m_ga->DrawPopulation(m_2dRenderer);
+	//m_ga->DrawPopulation(m_2dRenderer);
 
 	m_2dRenderer->end();
 }
