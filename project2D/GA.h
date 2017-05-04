@@ -43,11 +43,15 @@ protected:
 private:
 	std::string GenRandomBits(int length);
 
-	Person* GA::GetHighestScorer();
+	std::vector<Person*> SortPeople();
+	void MutateBottom50();
+	void BreedTop50();
 
 	int				m_currentGeneration;
 	bool			m_simulationStarted;
 
 	b2Vec2			m_target;
+	std::vector<Person*> m_top50;
+	std::vector<Person*> m_bottom50;
 };
 

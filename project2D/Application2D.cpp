@@ -28,7 +28,6 @@ bool Application2D::startup() {
 
 	m_ga = new GA(b2Vec2(m_target->GetBody()->GetPosition()));
 
-
 	for (int i = 0; i < m_ga->GetPeople().size(); i++) {
 		m_ga->GetPeople()[i]->init(m_world.get(), glm::vec2(getWindowWidth() / 2, getWindowHeight() / 2), glm::vec2(25.0f, 25.0f));
 	}
@@ -69,7 +68,7 @@ void Application2D::draw() {
 	
 	m_target->Draw(m_2dRenderer);
 
-	//m_ga->DrawPopulation(m_2dRenderer);
+	m_ga->DrawPopulation(m_2dRenderer);
 
 	m_2dRenderer->end();
 }
