@@ -14,6 +14,8 @@ Person::~Person()
 
 void Person::init(b2World * world, const glm::vec2 & position, const glm::vec2 & dimensions)
 {
+	m_world = world;
+
 	m_dimensions = dimensions;
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;

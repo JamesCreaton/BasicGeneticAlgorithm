@@ -23,6 +23,7 @@ public:
 	void SetProbability(float a_probablity);
 
 	//Getters
+	b2World* GetWorld() { return m_world; };
 	float GetFitness();
 	b2Body* GetBody() { return m_body; }
 	b2Fixture* GetFixture() { return m_fixture; }
@@ -34,6 +35,7 @@ protected:
 	float						m_fitness;
 
 private:
+	b2World* 	m_world;
 	b2Body*		m_body = nullptr;
 	b2Fixture*	m_fixture = nullptr;
 	glm::vec2	m_dimensions;

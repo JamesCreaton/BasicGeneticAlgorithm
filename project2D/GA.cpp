@@ -99,7 +99,7 @@ void GA::UpdatePopulation(float dt)
 		CalculateGenerationFitness(m_population);
 
 		//Breed the top 50%
-		BreedTop50();
+		BreedPopulation(&m_top50);
 
 		//Mutate the bottom 50%
 		MutateBottom50();
@@ -173,24 +173,53 @@ void GA::CalculateGenerationFitness(Population* a_population)
 
 void GA::BreedPopulation(std::vector<Person*>* a_people)
 {
-	
+
 	Person* child1 = new Person();
 	Person* child2 = new Person();
-	
-	for (auto& person : *a_people) {
+
+	std::vector<Person*> children;
+
+	Chromosone newChromo;
+	Genome	   newGenome;
+
+	for (int i = 0; i < m_population->GetPeople()->size() / 2; i++) {
 
 		Person* parent1 = GetWeightedRandomPerson(*a_people);
 		Person* parent2 = GetWeightedRandomPerson(*a_people);
 
-		if (parent1->GetFitness() != parent2->GetFitness())
-		{
-			child1->SetInstructionSet(std::string(parent1->GetInstructionSet()[0] + parent1->GetInstructionSet()[1] + parent2->GetInstructionSet()[2] + parent2->GetInstructionSet()[3]));
-			child2->SetInstructionSet(std::string(parent2->GetInstructionSet()[0] + parent2->GetInstructionSet()[1] + parent1->GetInstructionSet()[2] + parent1->GetInstructionSet()[3]));
-		}
-	}
+		child1->init(parent1->GetWorld(), glm::vec2(640.0f, 360.0f), glm::vec2(25.0f, 25.0f));
+		child2->init(parent1->GetWorld(), glm::vec2(640.0f, 360.0f), glm::vec2(25.0f, 25.0f));
 
-	
+		child1->SetInstructionSet(std::string(parent1->GetInstructionSet()[0]));
+		child1->SetInstructionSet(std::string(parent1->GetInstructionSet()[1]));
+		child1->SetInstructionSet(std::string(parent1->GetInstructionSet()[2]));
+		child1->SetInstructionSet(std::string(parent1->GetInstructionSet()[3]));
+
+		child1->SetInstructionSet(std::string(parent2->GetInstructionSet()[4]));
+		child1->SetInstructionSet(std::string(parent2->GetInstructionSet()[5]));
+		child1->SetInstructionSet(std::string(parent2->GetInstructionSet()[6]));
+		child1->SetInstructionSet(std::string(parent2->GetInstructionSet()[7]));
+
+		child2->SetInstructionSet(std::string(parent2->GetInstructionSet()[0]));
+		child2->SetInstructionSet(std::string(parent2->GetInstructionSet()[1]));
+		child2->SetInstructionSet(std::string(parent2->GetInstructionSet()[2]));
+		child2->SetInstructionSet(std::string(parent2->GetInstructionSet()[3]));
+
+		child2->SetInstructionSet(std::string(parent1->GetInstructionSet()[4]));
+		child2->SetInstructionSet(std::string(parent1->GetInstructionSet()[5]));
+		child2->SetInstructionSet(std::string(parent1->GetInstructionSet()[6]));
+		child2->SetInstructionSet(std::string(parent1->GetInstructionSet()[7]));
+
+		children.push_back(child1);
+		children.push_back(child2);
+	}
+	for (int i = 0; i < a_people->size(); i++) {
+		(*a_people)[i] = children[i];
+	}
 }
+
+
+
 
 Person* GA::GetWeightedRandomPerson(std::vector<Person*> a_people)
 {
@@ -199,7 +228,7 @@ Person* GA::GetWeightedRandomPerson(std::vector<Person*> a_people)
 	int r = dist(m_randEngine);
 
 	for (auto& person : a_people) {
-		r += person->GetFitness();
+		r -= person->GetFitness();
 		if (r < 0)
 		{
 			//This is the person
