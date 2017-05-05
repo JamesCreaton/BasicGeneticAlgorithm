@@ -4,7 +4,8 @@
 
 Person::Person()
 	:m_fitness(1.0f),
-	currentMove(0)
+	currentMove(0),
+	m_probabilityOfBreeding(0)
 {
 }
 Person::~Person()
@@ -98,8 +99,23 @@ void Person::SetFitness(float a_fitness)
 	m_fitness = a_fitness;
 }
 
+void Person::SetProbability(float a_probablity)
+{
+	m_probabilityOfBreeding = a_probablity;
+}
+
 float Person::GetFitness()
 {
 	return m_fitness;
+}
+
+std::vector<std::string> Person::GetInstructionSet()
+{
+	return m_instructions;
+}
+
+float Person::GetProbability()
+{
+	return m_probabilityOfBreeding;
 }
 

@@ -20,11 +20,14 @@ public:
 	//Setters
 	void SetInstructionSet(std::string instructions);
 	void SetFitness(float a_fitness);
+	void SetProbability(float a_probablity);
 
 	//Getters
 	float GetFitness();
 	b2Body* GetBody() { return m_body; }
 	b2Fixture* GetFixture() { return m_fixture; }
+	std::vector<std::string> GetInstructionSet();
+	float GetProbability();
 
 protected:
 	std::vector<std::string>	m_instructions;
@@ -37,6 +40,8 @@ private:
 
 	int BinToDec(std::string bits);
 	void MoveAgent(int move);
+
+	float m_probabilityOfBreeding;
 
 
 	//Testing

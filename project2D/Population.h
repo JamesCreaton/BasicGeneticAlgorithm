@@ -12,10 +12,12 @@ public:
 	~Population();
 
 	void GenerateNewPopulation();
-	std::vector<Person*> GetPeople();
+	std::vector<Person*>* GetPeople();
+	//std::list<Person*>	 GetPeople();
 
 
 protected:
-	std::vector<Person*>			m_people;
+	std::vector<Person*>			    m_people;
+	//std::list<Person*>				m_people;
 };
 

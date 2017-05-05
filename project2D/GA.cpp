@@ -5,21 +5,28 @@
 #define RANDOM_NUM		((float)rand()/(RAND_MAX+1))
 
 GA::GA(b2Vec2 Target)
+	:m_randEngine(std::random_device()()),
+	m_totalFitness(0),
+	m_target(Target),
+	m_currentGeneration(1),
+	m_simulationStarted(true)
 {
-	//	srand((int)time)(NULL);
 	m_population = new Population(POP_SIZE);
-
-
 	for (int i = 0; i < POP_SIZE; i++) {
-		Person* reference = m_population->GetPeople()[i];
+		Person* reference = (*m_population->GetPeople())[i];
 		for (int j = 0; j < GENE_LENGTH; j++) {
 			reference->SetInstructionSet(GenerateRandomGenome().m_genome[j].m_bits);
 		}
 	}
 
-	m_simulationStarted = true;
-	m_currentGeneration = 1;
-	m_target = Target;
+	//m_population = new Population(POP_SIZE);
+	//for (auto& person : m_population->GetPeople()) {
+	//	Person* reference = person;
+	//	for (int j = 0; j < GENE_LENGTH; j++) {
+	//		reference->SetInstructionSet(GenerateRandomGenome().m_genome[j].m_bits);
+	//	}
+	//}
+
 }
 
 
@@ -36,86 +43,79 @@ void GA::CalculateSuccess(Person* a_person)
 
 	double distance = sqrt(distancex - distancey);
 
-	a_person->SetFitness(2000 - distance);
+	//get difference between 9600 to 1000 is score
+
+	a_person->SetFitness(10000 - distance);
 }
 
 void GA::TestGeneration()
 {
-	for (auto& Person : m_population->GetPeople()) {
+	for (auto& Person : (*m_population->GetPeople())) {
 		CalculateSuccess(Person);
-	}
+	};
 
-	std::vector<Person*> sortedPeople = SortPeople();
+	SortPeople();
 
-	for (int i = sortedPeople.size() / 2; i < sortedPeople.size(); i++) {
+	for (int i = 0; i < m_population->GetPeople()->size() / 2; i++) {
 		//Get the top 50%
-		m_top50.push_back(sortedPeople[i]);
+		m_top50.push_back((*m_population->GetPeople())[i]);
 	}
 
-	for (int i = 0; i < sortedPeople.size() / 2; i++) {
+	for (int i = m_population->GetPeople()->size() / 2; i < m_population->GetPeople()->size(); i++) {
 		//Get the bottom 50%
-		m_bottom50.push_back(sortedPeople[i]);
+		m_bottom50.push_back((*m_population->GetPeople())[i]);
 	}
-	std::reverse(m_top50.begin(), m_top50.end());
-	std::reverse(m_bottom50.begin(), m_bottom50.end());
+
+	for (int i = 0; i < m_top50.size(); i++) {
+		std::cout << m_top50[i]->GetFitness() << std::endl;
+	}
+
+	system("pause");
+
+	for (int i = 0; i < m_bottom50.size(); i++) {
+		std::cout << m_bottom50[i]->GetFitness() << std::endl;
+	}
+	system("pause");
+
+	//m_highestFitness = m_top50[0]->GetFitness();
 }
 
 void GA::NewGeneration()
 {
-	//Find the best from the last generation
-	TestGeneration();
 
-	//Breed the top 50%
-	BreedTop50();
-
-	//Mutate the bottom 50%
-	MutateBottom50();
-
-	if (m_simulationStarted) {
-		if (m_currentGeneration != MAX_ALLOWABLE_GENERATIONS) {
-
-		}
-	}
-
-	//Run roulette-wheel selection and get the best People from current generation
-	//Breed the best people from current generation
-	//Add the children created into this new generation
-	//Fill the rest of the genreation with new randomized/mutated people
-
-
-	/*Maybe iterate through all of the current generation ordered descending
-	from */
-
-	//for (int i = 0; i < POP_SIZE; i++) {
-	//	m_population[i].GetPeople()[i] = new Person(GenerateRandomGenome().m_genome[i].m_bits);
-	//}
 }
 
 void GA::UpdatePopulation(float dt)
 {
 	int generationFinished = 0;
-	for (auto& person : m_population->GetPeople()) {
+	for (auto& person : *m_population->GetPeople()) {
 		person->Update(dt);
 		generationFinished++;
 	}
-	if (generationFinished = m_population->GetPeople().size() * 3) {
-		//The generation has finihsed trying to solve the problem
-		
+	if (generationFinished = (*m_population->GetPeople()).size() * 3) {
+
 		//Evaluate the fitness
-		NewGeneration();
+		TestGeneration();
+		CalculateGenerationFitness(m_population);
 
-		//breed the top 50%
+		//Breed the top 50%
+		BreedTop50();
 
-		//mutate the bottom 50%
+		//Mutate the bottom 50%
+		MutateBottom50();
 
-
+		if (m_simulationStarted) {
+			if (m_currentGeneration != MAX_ALLOWABLE_GENERATIONS) {
+				NewGeneration();
+			}
+		}
 		generationFinished = 0;
 	}
 }
 
 void GA::DrawPopulation(aie::Renderer2D* renderer)
 {
-	for (auto& person : m_population->GetPeople()) {
+	for (auto& person : (*m_population->GetPeople())) {
 		person->Draw(renderer);
 	}
 }
@@ -146,30 +146,112 @@ std::string	GA::GenRandomBits(int length)
 	return bits;
 }
 
-std::vector<Person*> GA::SortPeople()
+struct Comparator
 {
-	std::vector<Person*> sortedPeople;
-	Person* highestScoringPerson = new Person();
-	highestScoringPerson->SetFitness(2000);
-
-	for (int i =0; i < m_population->GetPeople().size(); i++)
+	bool operator()(Person* a, Person* b) const
 	{
-		if (m_population->GetPeople()[i]->GetFitness() < highestScoringPerson->GetFitness())
+		return a->GetFitness() > b->GetFitness();
+	}
+};
+
+void GA::SortPeople()
+{
+	std::sort(m_population->GetPeople()->begin(), m_population->GetPeople()->end(), Comparator());
+}
+
+bool cmp(Person* a, Person* b) {
+
+	return (a->GetFitness() < b->GetFitness());
+}
+
+void GA::CalculateGenerationFitness(Population* a_population)
+{
+	for (auto& person : (*a_population->GetPeople())) {
+		m_totalFitness += person->GetFitness();
+	}
+}
+
+void GA::BreedPopulation(std::vector<Person*>* a_people)
+{
+	
+	Person* child1 = new Person();
+	Person* child2 = new Person();
+	
+	for (auto& person : *a_people) {
+
+		Person* parent1 = GetWeightedRandomPerson(*a_people);
+		Person* parent2 = GetWeightedRandomPerson(*a_people);
+
+		if (parent1->GetFitness() != parent2->GetFitness())
 		{
-			highestScoringPerson = m_population->GetPeople()[i];
+			child1->SetInstructionSet(std::string(parent1->GetInstructionSet()[0] + parent1->GetInstructionSet()[1] + parent2->GetInstructionSet()[2] + parent2->GetInstructionSet()[3]));
+			child2->SetInstructionSet(std::string(parent2->GetInstructionSet()[0] + parent2->GetInstructionSet()[1] + parent1->GetInstructionSet()[2] + parent1->GetInstructionSet()[3]));
 		}
-		sortedPeople.push_back(highestScoringPerson);
 	}
 
-	return sortedPeople;
+	
 }
 
-void BreedTop50()
+Person* GA::GetWeightedRandomPerson(std::vector<Person*> a_people)
 {
+	std::uniform_int_distribution<int> dist(0, m_totalFitness / 2 - 1);
 
+	int r = dist(m_randEngine);
+
+	for (auto& person : a_people) {
+		r += person->GetFitness();
+		if (r < 0)
+		{
+			//This is the person
+			return person;
+		}
+	}
 }
 
-void MutateBottom50()
+void GA::MutateBottom50()
 {
+}
 
+
+void GA::MutateGenome1(Person& a_person)
+{
+	std::uniform_int_distribution<int> dist(0, a_person.GetInstructionSet().size());
+
+	int rnd = dist(m_randEngine);
+
+	std::vector<std::string> mutatedGenome = a_person.GetInstructionSet();
+	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
+}
+
+void GA::MutateGenome2(Person& a_person)
+{
+	int floor = 0, ceiling = a_person.GetInstructionSet().size(), range = (ceiling - floor);
+	int rnd = floor + int((range * rand()) / (RAND_MAX + 1.0));
+
+	std::vector<std::string> mutatedGenome = a_person.GetInstructionSet();
+	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
+	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
+}
+
+void GA::MutateGenome3(Person& a_person)
+{
+	int floor = 0, ceiling = a_person.GetInstructionSet().size(), range = (ceiling - floor);
+	int rnd = floor + int((range * rand()) / (RAND_MAX + 1.0));
+
+	std::vector<std::string> mutatedGenome = a_person.GetInstructionSet();
+	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
+	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
+	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
+}
+
+void GA::MutateGenome4(Person& a_person)
+{
+	int floor = 0, ceiling = a_person.GetInstructionSet().size(), range = (ceiling - floor);
+	int rnd = floor + int((range * rand()) / (RAND_MAX + 1.0));
+
+	std::vector<std::string> mutatedGenome = a_person.GetInstructionSet();
+	mutatedGenome[0] = GenRandomBits(CHROMO_LENGTH);
+	mutatedGenome[1] = GenRandomBits(CHROMO_LENGTH);
+	mutatedGenome[2] = GenRandomBits(CHROMO_LENGTH);
+	mutatedGenome[3] = GenRandomBits(CHROMO_LENGTH);
 }

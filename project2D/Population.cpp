@@ -23,7 +23,12 @@ void Population::GenerateNewPopulation()
 
 }
 
-std::vector<Person*> Population::GetPeople()
+std::vector<Person*>* Population::GetPeople()
 {
-	return m_people;
+	return &m_people;
 }
+
+//std::list<Person*> Population::GetPeople()
+//{
+//	return m_people;
+//}
