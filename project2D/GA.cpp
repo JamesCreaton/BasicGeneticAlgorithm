@@ -184,6 +184,13 @@ void GA::CalculateGenerationFitness(Population* a_population)
 
 void GA::BreedPopulation(std::vector<Person*>* a_people)
 {
+	//choose two
+	//breed them
+
+	/*set person [i] to the new child from
+	those parents- Goes from 0 to people.size*/
+
+	//repeat process until all a_people have been set
 
 	Person* child1 = new Person();
 	Person* child2 = new Person();
@@ -262,6 +269,7 @@ void GA::MutateGenome1(Person& a_person)
 	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
 
 	a_person.ClearInstructionSet();
+	a_person.SetFitness(0);
 
 	for (int i = 0; i < mutatedGenome.size(); i++) {
 		a_person.SetInstructionSet(mutatedGenome[i]);
@@ -279,6 +287,7 @@ void GA::MutateGenome2(Person& a_person)
 	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
 
 	a_person.ClearInstructionSet();
+	a_person.SetFitness(0);
 
 	for (int i = 0; i < mutatedGenome.size(); i++) {
 		a_person.SetInstructionSet(mutatedGenome[i]);
@@ -297,6 +306,7 @@ void GA::MutateGenome3(Person& a_person)
 	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
 
 	a_person.ClearInstructionSet();
+	a_person.SetFitness(0);
 
 	for (int i = 0; i < mutatedGenome.size(); i++) {
 		a_person.SetInstructionSet(mutatedGenome[i]);
@@ -316,6 +326,7 @@ void GA::MutateGenome4(Person& a_person)
 	mutatedGenome[3] = GenRandomBits(CHROMO_LENGTH);
 
 	a_person.ClearInstructionSet();
+	a_person.SetFitness(0);
 
 	for (int i = 0; i < mutatedGenome.size(); i++) {
 		a_person.SetInstructionSet(mutatedGenome[i]);
