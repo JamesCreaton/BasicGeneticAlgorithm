@@ -5,11 +5,9 @@
 #define CROSSOVER_RATE	0.7
 #define MUTATION_RATE	0.1
 #define POP_SIZE		10
-#define CHROMO_LENGTH	300
-#define GENE_LENGTH		4
-#define MAX_ALLOWABLE_GENERATIONS 400
+#define MAX_ALLOWABLE_GENERATIONS 12
 #define CHROMO_LENGTH	2
-#define GENE_LENGTH		16
+#define GENE_LENGTH		6
 
 class GA
 {
@@ -32,11 +30,11 @@ public:
 
 	void UpdatePopulation(float dt);
 	void DrawPopulation(aie::Renderer2D* renderer);
+	void DrawGUI(aie::Renderer2D* renderer, aie::Font* a_font);
 
 	Genome GenerateRandomGenome();
 
 	std::vector<Person*>* GetPeople() { return m_population->GetPeople(); }
-	//std::list<Person*> GetPeople() { return m_population->GetPeople(); }
 
 protected:
 	
@@ -46,7 +44,7 @@ private:
 	std::string GenRandomBits(int length);
 
 	void SortPeople();
-	void MutateBottom50();
+	void MutateBottom50(std::vector<Person*>* a_people);
 	void BreedPopulation(std::vector<Person*>* a_people);
 
 	Person * GetWeightedRandomPerson(std::vector<Person*> a_people);

@@ -21,6 +21,7 @@ public:
 	void SetInstructionSet(std::string instructions);
 	void SetFitness(float a_fitness);
 	void SetProbability(float a_probablity);
+	void SetCurrentMove(int a_currentMove) { m_currentMove = a_currentMove; }
 
 	//Getters
 	b2World* GetWorld() { return m_world; };
@@ -29,6 +30,7 @@ public:
 	b2Fixture* GetFixture() { return m_fixture; }
 	std::vector<std::string> GetInstructionSet();
 	float GetProbability();
+	int GetCurrentMove() { return m_currentMove; }
 
 protected:
 	std::vector<std::string>	m_instructions;
@@ -47,6 +49,6 @@ private:
 
 
 	//Testing
-	int currentMove;
+	int m_currentMove;
 }; 
 

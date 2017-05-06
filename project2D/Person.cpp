@@ -4,7 +4,7 @@
 
 Person::Person()
 	:m_fitness(1.0f),
-	currentMove(0),
+	m_currentMove(0),
 	m_probabilityOfBreeding(0)
 {
 }
@@ -39,8 +39,8 @@ void Person::Update(float dt)
 	//Get curret position
 	//Apply force towards next position
 
-	if (currentMove <= 3) {
-		MoveAgent(currentMove);
+	if (m_currentMove <= 3) {
+		MoveAgent(m_currentMove);
 	}
 }
 
@@ -93,7 +93,7 @@ void Person::MoveAgent(int move)
 	}
 
    }
-	currentMove++;
+	m_currentMove++;
 }
 
 void Person::SetFitness(float a_fitness) 

@@ -12,6 +12,7 @@
 #include "Person.h"
 #include "Sphere.h"
 #include "Target.h"
+#include <Font.h>
 
 using glm::vec2;
 using glm::vec3;
@@ -32,6 +33,8 @@ public:
 private:
 	GA* m_ga;
 	aie::Renderer2D*				m_2dRenderer;
+
+	aie::Font*						m_font;
 
 	std::unique_ptr<b2World>		m_world;
 	b2Vec2							m_gravity;
