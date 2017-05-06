@@ -19,6 +19,8 @@ public:
 
 	//Setters
 	void SetInstructionSet(std::string instructions);
+	void SetInstructionSetAtIndex(std::string instructions, int index);
+	void ClearInstructionSet();
 	void SetFitness(float a_fitness);
 	void SetProbability(float a_probablity);
 	void SetCurrentMove(int a_currentMove) { m_currentMove = a_currentMove; }

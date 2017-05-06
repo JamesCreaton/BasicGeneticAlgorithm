@@ -9,7 +9,8 @@ GA::GA(b2Vec2 Target)
 	m_totalFitness(0),
 	m_target(Target),
 	m_currentGeneration(1),
-	m_simulationStarted(true)
+	m_simulationStarted(true),
+	m_solutionFound(false)
 {
 	m_population = new Population(POP_SIZE);
 	for (int i = 0; i < POP_SIZE; i++) {
@@ -35,6 +36,17 @@ void GA::CalculateSuccess(Person* a_person)
 	double distance = sqrt(distancex - distancey);
 
 	a_person->SetFitness(10000 - distance);
+
+	int success = 0;
+	for (int i = 0; i < a_person->GetInstructionSet().size(); i++) {
+		if (a_person->GetInstructionSet()[i] == "01") {
+			success++;
+		}
+	}
+
+	if (success == GENE_LENGTH) {
+		m_solutionFound = true;
+	}
 }
 
 void GA::TestGeneration()
@@ -66,8 +78,6 @@ void GA::NewGeneration()
 	//Mutate the bottom 50%
 	MutateBottom50(&m_bottom50);
 
-
-
 	m_currentGeneration++;
 }
 
@@ -85,13 +95,19 @@ void GA::UpdatePopulation(float dt)
 			TestGeneration();
 			CalculateGenerationFitness(m_population);
 
-			if (m_currentGeneration != MAX_ALLOWABLE_GENERATIONS) {
-				NewGeneration();
+			if (m_solutionFound) {
+				m_simulationStarted = false;
+				std::cout << "Solution found at generation: " << m_currentGeneration << std::endl;
 			}
 			else {
-				m_simulationStarted = false;
+				if (m_currentGeneration != MAX_ALLOWABLE_GENERATIONS) {
+					NewGeneration();
+				}
+				else {
+					m_simulationStarted = false;
+				}
+				generationFinished = 0;
 			}
-			generationFinished = 0;
 		}
 	}
 }
@@ -177,7 +193,7 @@ void GA::BreedPopulation(std::vector<Person*>* a_people)
 	Chromosone newChromo;
 	Genome	   newGenome;
 
-	for (int i = 0; i < m_population->GetPeople()->size() / 2; i++) {
+	//for (int i = 0; i < m_population->GetPeople()->size() / 2; i++) {
 
 		/*	Person* parent1 = GetWeightedRandomPerson(*a_people);
 			Person* parent2 = GetWeightedRandomPerson(*a_people);
@@ -191,7 +207,7 @@ void GA::BreedPopulation(std::vector<Person*>* a_people)
 		for (int i = 0; i < a_people->size(); i++) {
 			(*a_people)[i] = children[i];
 		}*/
-	}
+		//	}
 }
 
 
@@ -238,11 +254,14 @@ void GA::MutateBottom50(std::vector<Person*>* a_people)
 
 void GA::MutateGenome1(Person& a_person)
 {
-	std::uniform_int_distribution<int> dist(0, a_person.GetInstructionSet().size() -1);
+	m_currentGeneration;
+	std::uniform_int_distribution<int> dist(0, a_person.GetInstructionSet().size() - 1);
 	int rnd = dist(m_randEngine);
 
 	std::vector<std::string> mutatedGenome = a_person.GetInstructionSet();
 	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
+
+	a_person.ClearInstructionSet();
 
 	for (int i = 0; i < mutatedGenome.size(); i++) {
 		a_person.SetInstructionSet(mutatedGenome[i]);
@@ -259,9 +278,12 @@ void GA::MutateGenome2(Person& a_person)
 	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
 	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
 
+	a_person.ClearInstructionSet();
+
 	for (int i = 0; i < mutatedGenome.size(); i++) {
 		a_person.SetInstructionSet(mutatedGenome[i]);
 	}
+	a_person.SetCurrentMove(0);
 }
 
 void GA::MutateGenome3(Person& a_person)
@@ -274,8 +296,11 @@ void GA::MutateGenome3(Person& a_person)
 	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
 	mutatedGenome[rnd] = GenRandomBits(CHROMO_LENGTH);
 
+	a_person.ClearInstructionSet();
+
 	for (int i = 0; i < mutatedGenome.size(); i++) {
 		a_person.SetInstructionSet(mutatedGenome[i]);
+		a_person.SetCurrentMove(0);
 	}
 }
 
@@ -289,4 +314,11 @@ void GA::MutateGenome4(Person& a_person)
 	mutatedGenome[1] = GenRandomBits(CHROMO_LENGTH);
 	mutatedGenome[2] = GenRandomBits(CHROMO_LENGTH);
 	mutatedGenome[3] = GenRandomBits(CHROMO_LENGTH);
+
+	a_person.ClearInstructionSet();
+
+	for (int i = 0; i < mutatedGenome.size(); i++) {
+		a_person.SetInstructionSet(mutatedGenome[i]);
+		a_person.SetCurrentMove(0);
+	}
 }

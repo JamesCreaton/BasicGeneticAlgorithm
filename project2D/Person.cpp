@@ -38,7 +38,6 @@ void Person::Update(float dt)
 {
 	//Get curret position
 	//Apply force towards next position
-
 	if (m_currentMove <= 3) {
 		MoveAgent(m_currentMove);
 	}
@@ -55,6 +54,16 @@ void Person::SetInstructionSet(std::string instructions)
 	m_instructions.push_back(instructions);
 }
 
+void Person::SetInstructionSetAtIndex(std::string instructions, int index)
+{
+	m_instructions[index] = instructions;
+}
+
+void Person::ClearInstructionSet()
+{
+	m_instructions.clear();
+}
+
 int	Person::BinToDec(std::string bits)
 {
 	int val = 0;
@@ -69,31 +78,28 @@ int	Person::BinToDec(std::string bits)
 }
 void Person::MoveAgent(int move)
 {
-
-	switch (BinToDec(m_instructions[move]))
-	{
-	case 0: /*Left*/ {
-		m_body->SetTransform(m_body->GetPosition() + b2Vec2(-50.0f, 0.0f), m_body->GetAngle());
-		break;
-	}
-	case 1: /*Right*/ {
-		m_body->SetTransform(m_body->GetPosition() + b2Vec2(50.0f, 0.0f), m_body->GetAngle());
-		//m_body->ApplyLinearImpulse(b2Vec2(500.0f, 500.0f), m_body->GetPosition() + b2Vec2(50.0f, 00.0f), false);
-		break;
-	}
-	case 2: /*Up*/ {
-		m_body->SetTransform(m_body->GetPosition() + b2Vec2(0.0f, 50.0f), m_body->GetAngle());
-		//m_body->ApplyLinearImpulse(b2Vec2(500.0f, 500.0f), m_body->GetPosition() + b2Vec2(0.0f, 50.0f), false);
-		break;
-	}
-	case 3: /*Down*/ {
-		m_body->SetTransform(m_body->GetPosition() + b2Vec2(0.0f, -50.0f), m_body->GetAngle());
-		//m_body->ApplyLinearImpulse(b2Vec2(500.0f, 500.0f), m_body->GetPosition() + b2Vec2(0.0f, -50.0f), false);
-		break;
-	}
-
+	if (m_instructions.size() > 0) {
+		switch (BinToDec(m_instructions[move]))
+		{
+		case 0: /*Left*/ {
+			m_body->SetTransform(m_body->GetPosition() + b2Vec2(-50.0f, 0.0f), m_body->GetAngle());
+			break;
+		}
+		case 1: /*Right*/ {
+			m_body->SetTransform(m_body->GetPosition() + b2Vec2(50.0f, 0.0f), m_body->GetAngle());
+			break;
+		}
+		case 2: /*Up*/ {
+			m_body->SetTransform(m_body->GetPosition() + b2Vec2(0.0f, 50.0f), m_body->GetAngle());
+			break;
+		}
+		case 3: /*Down*/ {
+			m_body->SetTransform(m_body->GetPosition() + b2Vec2(0.0f, -50.0f), m_body->GetAngle());
+			break;
+		}
+	 }
+		m_currentMove++;
    }
-	m_currentMove++;
 }
 
 void Person::SetFitness(float a_fitness) 

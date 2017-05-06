@@ -5,7 +5,7 @@
 #define CROSSOVER_RATE	0.7
 #define MUTATION_RATE	0.1
 #define POP_SIZE		10
-#define MAX_ALLOWABLE_GENERATIONS 12
+#define MAX_ALLOWABLE_GENERATIONS 65
 #define CHROMO_LENGTH	2
 #define GENE_LENGTH		6
 
@@ -63,8 +63,9 @@ private:
 	std::vector<Person*> m_top50;
 	std::vector<Person*> m_bottom50;
 
-	int m_highestFitness;
-	int m_totalFitness;
+	int		m_highestFitness;
+	int		m_totalFitness;
+	bool	m_solutionFound;
 
 	std::default_random_engine m_randEngine;
 };
