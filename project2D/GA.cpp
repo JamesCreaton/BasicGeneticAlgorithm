@@ -184,37 +184,71 @@ void GA::CalculateGenerationFitness(Population* a_population)
 
 void GA::BreedPopulation(std::vector<Person*>* a_people)
 {
-	//choose two
-	//breed them
-
-	/*set person [i] to the new child from
-	those parents- Goes from 0 to people.size*/
-
-	//repeat process until all a_people have been set
-
-	Person* child1 = new Person();
-	Person* child2 = new Person();
-
-	std::vector<Person*> children;
-
-	Chromosone newChromo;
-	Genome	   newGenome;
-
-	//for (int i = 0; i < m_population->GetPeople()->size() / 2; i++) {
-
-		/*	Person* parent1 = GetWeightedRandomPerson(*a_people);
-			Person* parent2 = GetWeightedRandomPerson(*a_people);
-
-			child1->init(parent1->GetWorld(), glm::vec2(640.0f, 360.0f), glm::vec2(25.0f, 25.0f));
-			child2->init(parent1->GetWorld(), glm::vec2(640.0f, 360.0f), glm::vec2(25.0f, 25.0f));
-
-			children.push_back(child1);
-			children.push_back(child2);
+	std::cout << " -- Before Crossover -- " << std::endl;
+	for (int i = 0; i < a_people->size(); i++) {
+		std::cout << "Person: " << i << std::endl;
+		for (int j = 0; j < a_people->size(); j++) {
+			std::cout << a_people->at(j)->GetInstructionSet()[j] << std::endl;
 		}
-		for (int i = 0; i < a_people->size(); i++) {
-			(*a_people)[i] = children[i];
-		}*/
-		//	}
+	}
+
+	for (auto& person : *a_people) {
+		Person* child1 = new Person();
+		Person* child2 = new Person();
+
+		//choose two
+		Person* parent1 = GetWeightedRandomPerson(*a_people);
+		Person* parent2 = GetWeightedRandomPerson(*a_people);
+
+		//breed them
+
+		/*set person [i] to the new child from
+		those parents- Goes from 0 to people.size*/
+
+		for (auto& person : *a_people) {
+			//calcuate crossover point
+			std::uniform_int_distribution<int> dist(1, GENE_LENGTH);
+			int r = dist(m_randEngine);
+
+			//get genome of p1 from 0 - r for child
+			for (int i = 0; i < r; i++) {
+				child1->SetInstructionSet(parent1->GetInstructionSet().at(i));
+			}
+
+			//get genom of p2 from  r - gene_length for child
+			for (int i = r; i < GENE_LENGTH; i++) {
+				child1->SetInstructionSet(parent2->GetInstructionSet().at(i));
+			}
+
+			//get genome of p1 from 0 - r for child
+			for (int i = 0; i < r; i++) {
+				child2->SetInstructionSet(parent2->GetInstructionSet().at(i));
+			}
+
+			//get genom of p2 from  r - gene_length for child
+			for (int i = r; i < GENE_LENGTH; i++) {
+				child2->SetInstructionSet(parent1->GetInstructionSet().at(i));
+			}
+
+
+			parent1->ClearInstructionSet();
+			parent2->ClearInstructionSet();
+			//set two of the curernt population to the xover genome
+			for (int i = 0; i < GENE_LENGTH; i++) {
+				parent1->SetInstructionSet(child1->GetInstructionSet().at(i));
+				parent2->SetInstructionSet(child2->GetInstructionSet().at(i));
+			}
+
+			delete child1;
+			delete child2;
+		}
+	}
+
+	std::cout << " -- After Crossover -- " << std::endl;
+	for (int i = 0; i < m_population->GetPeople()->size(); i++) {
+		std::cout << "Person: " << i << std::endl;
+		std::cout << m_population->GetPeople()->at(i)->GetInstructionSet().at(i) << std::endl;
+	}
 }
 
 
