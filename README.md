@@ -1,3 +1,32 @@
+# README #
+
+This repository contains a Genetic Algorithm I created for my second year programming assessment on complex game systems. This Genetic Alogrithm solves a simple problem of finding the quickest route to an object. The visual representation of the algorithm needs some work, which I plan to do.
+
+### What is this repository for? ###
+
+The main use of this repository is to have an online backup of my programming work
+and an example of my knowledge.
+
+### How do I get set up? ####
+
+Refer to the aieBootstrap section for information on how it's used in this project.
+
+The only setup that should be required is setting the envrioment to be run in x86. All of the dependencies are contained
+in the deps folder.
+
+### Who do I talk to? ###
+
+James Creaton
+
+
+jamescreatonn@gmail.com
+
+
+jamescreaton.com
+
+
+
+
 # aieBootstrap
 The base project code used for the Advanced Diploma of Professional Game Development to aid in graphical real-time applications.
 
